@@ -151,6 +151,8 @@ def menu3():
             print("The new product list is as below")
             for index, val in enumerate(af.food_dict[choice_tuple[2]]):
                 print(f"{index} - {val}")
+            #persist the data by writing to txt file
+            af.export_products()
             input("Press any key to return to main menu")
             menu2()
         else:
@@ -225,6 +227,8 @@ def menu4():
             print("The new product list is as below")
             for index, val in enumerate(af.food_dict[desired_cat[2]]):
                 print(f"{index} - {val}")
+            #persist the data by writing to txt file
+            af.export_products()
             input("Press any key to return to main menu")
             menu2()
         else:
@@ -288,6 +292,7 @@ def menu5():
             for index, val in enumerate(af.food_dict[desired_cat[2]]):
                 print(f"{index} - {val}")
             input("Press any key to return to main menu")
+            af.export_products()
             menu2()
         else:
             print(
@@ -300,3 +305,5 @@ try:
     menu1()
 except ValueError:
     print("Input error, please enter only integers")
+except Exception as e:
+    print('An error occurred: ' + str(e))
