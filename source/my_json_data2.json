@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Jon",
+    "phone": 123456,
+    "age": 99,
+    "is_active": true,
+    "address": null,
+    "friends": [
+      {
+        "name": "Bob",
+        "phone": 789443
+      },
+      {
+        "name": "Henry",
+        "phone": 763337
+      }
+    ]
+  },
+  {
+    "name": "Edward",
+    "phone": 789448,
+    "age": 99,
+    "is_active": true,
+    "address": null,
+    "friends": [
+      {
+        "name": "Thomas",
+        "phone": 789443
+      },
+      {
+        "name": "Emily",
+        "phone": 763337
+      }
+    ]
+  },
+  {
+    "name": "Bob",
+    "phone": 789443,
+    "age": 99,
+    "is_active": true,
+    "address": null,
+    "friends": [
+      {
+        "name": "Rachel",
+        "phone": 789443
+      },
+      {
+        "name": "Topham",
+        "phone": 763337
+      }
+    ]
+  }
+]
