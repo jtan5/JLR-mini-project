@@ -9,7 +9,7 @@ import access_func as af
 yes_no = ['No', 'Yes']
 option1 = ['Quit', 'View all products on menu']
 option2 = ['Main Menu', 'Print Product List', 'Create New Product',
-           'UPDATE Exising Product', 'DELETE Existing Product', 'Import products']
+           'UPDATE Exising Product', 'DELETE Existing Product', 'Print Courier List']
 
 
 
@@ -27,6 +27,7 @@ option2 = ['Main Menu', 'Print Product List', 'Create New Product',
 #food_dict = dict(zip(choice_list[0], [drinks]))
 
 af.import_products()
+af.import_couriers()
 
 
 # Decision tree for questions
@@ -110,11 +111,12 @@ def menu2():
         menu5()
         return choice_tuple
     elif choice_tuple[0] == 5:  # do this if selecting to remove a product
-        print("Changing categories - To be done when i get more time.\nDynamic list now in place")
-        # to import products
-        
-        # menu5()
-        return choice_tuple
+        #print("Print list of couriers.\n")
+        os.system('clear')
+        print("\n".join("{}\t{}".format(k, v) for k, v in af.couriers_dict.items()))
+        input("Press any key to clear screen and return to main menu")
+        os.system('clear')
+        menu2()
 
 
 def menu3():
