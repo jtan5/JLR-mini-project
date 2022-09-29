@@ -44,7 +44,7 @@ C|====| ._o8o8o8Oo_.
 
 def printdynamic(a, question, art, add_option=0):
     # clear() - using replit
-    os.system('cls')
+    os.system('clear')
     print(art)
     print(question)
     for index, val in enumerate(a):
@@ -90,12 +90,12 @@ def menu2():
         # choice_list.append(choice_tuple[2])
     elif choice_tuple[0] == 1:
         # clear() - using replit
-        os.system('cls')
+        os.system('clear')
         print("\n".join("{}\t{}".format(k, v) for k, v in af.food_dict.items()))
         # choice_list.append(choice_tuple[2])
         #print(f"The new choice list now looks like this {choice_list}\n")
         input("Press any key to clear screen and return to main menu")
-        os.system('cls')
+        os.system('clear')
         menu2()
     elif choice_tuple[0] == 2:  # do this if selecting to add new product
         print("Creating new products")
@@ -147,7 +147,7 @@ def menu3():
             new_prod = input(
                 "Please enter the product that you would like to add\n")
             af.food_dict[choice_tuple[2]].append(new_prod)
-            os.system('cls')
+            os.system('clear')
             print("The new product list is as below")
             for index, val in enumerate(af.food_dict[choice_tuple[2]]):
                 print(f"{index} - {val}")
@@ -159,7 +159,7 @@ def menu3():
             #print("***DEBUG NOTICE***")
             # print(
             #    f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
-            os.system('cls')
+            os.system('clear')
             print("Excellent choice, products were definately lacking in this category.\n")
 
 
@@ -223,7 +223,7 @@ def menu4():
             #edit_list[index] = new_prod_name
             # food_dict[choice_tuple[2]]
             # food_dict[choice_tuple[2]].append(new_prod)
-            os.system('cls')
+            os.system('clear')
             print("The new product list is as below")
             for index, val in enumerate(af.food_dict[desired_cat[2]]):
                 print(f"{index} - {val}")
@@ -235,7 +235,7 @@ def menu4():
             # print(
             #    f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
             #print("it does not match")
-            os.system('cls')
+            os.system('clear')
 
 
 def menu5():
@@ -287,7 +287,7 @@ def menu5():
             edit_list_new.remove(choice_tuple[2])
             af.food_dict[desired_cat[2]] = edit_list_new
 
-            os.system('cls')
+            os.system('clear')
             print("The new product list is as below")
             for index, val in enumerate(af.food_dict[desired_cat[2]]):
                 print(f"{index} - {val}")
