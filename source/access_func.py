@@ -97,3 +97,20 @@ def import_couriers():
             #print(f"Final filename contents of file: {clean_name}: {globals()[clean_name]}")
             couriers_dict[clean_name] = globals()[clean_name]
     print(f"Final filename contents of file: {couriers_list[-1]}: {globals()[couriers_list[-1]]}")
+    
+def export_couriers():
+    #sorting out the correct directories
+    current_path = os.getcwd()
+    parent_path = os.path.dirname(current_path)
+    couriers_path = os.path.join(parent_path, "couriers")
+    
+    #getting the latest choice_list from food_dict
+    courier_list = list(couriers_dict.keys())
+    
+    for key in couriers_dict.keys():
+        globals()[key]
+        filename = key + ".txt"
+        with open(os.path.join(couriers_path, filename), 'w') as file:
+            for product_name in couriers_dict[key]:
+                file.write(product_name + '\n')
+ 
