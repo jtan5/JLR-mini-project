@@ -1,3 +1,0 @@
-name, phone
-Jon, 123456
-Rob, 124567
