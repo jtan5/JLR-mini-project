@@ -4,6 +4,10 @@ import time
 
 import sys
 import os
+from pathlib import Path
+from datetime import datetime
+ 
+
 os.path.abspath(__file__)
 current_path = os.getcwd()
 print(current_path)
@@ -16,8 +20,9 @@ yes_no = ['No', 'Yes']
 
 
 
-af.import_products()
-af.import_couriers()
+food_dict = af.import_products()        #function returns food_dict
+couriers_dict = af.import_couriers()    #function returns couriers dict
+orders_list = af.import_orders()        #function returns orders_list
 
 
 # Decision tree for questions
@@ -46,7 +51,7 @@ def printdynamic(a, question, art, add_option=0):
     print(art)
     print(question)
     for index, val in enumerate(a):
-        print(f"{index} - {val}")
+        print(f"[{index}] - {val}")
     if add_option == 1:
         print("99 - Return to main menu")
 
@@ -75,7 +80,7 @@ def menu1():
         question_p = f"Main Menu - {menu_type_p.title()}s"
         option_p = ['Main Menu', 'Print Product List', 'Create New Product',
           'UPDATE Exising Product', 'DELETE Existing Product']
-        menu2(question_p,af.food_dict,option_p,menu_type_p,food_drink_art,af.export_products)
+        menu2(question_p,food_dict,option_p,menu_type_p,food_drink_art,af.export_products)
         return choice_tuple  # continue to next segment
     if choice_tuple[0] == 2: #2 for couriers
         menu_type_c = "courier"
@@ -83,7 +88,7 @@ def menu1():
         option_2c = ['Main Menu', 'Print Couriers List', 'Create New Courier',
            'WIP - UPDATE Exising Courier', 'WIP - DELETE Existing Courier']
         art = courier_art
-        menu2(question_c,af.couriers_dict,option_2c,menu_type_c,courier_art,af.export_couriers)
+        menu2(question_c,couriers_dict,option_2c,menu_type_c,courier_art,af.export_couriers)
         return choice_tuple  # continue to next segment
     if choice_tuple[0] == 3: #3 for orders
         menu_type_o = "order"
@@ -91,14 +96,14 @@ def menu1():
         option_o = ['Main Menu', 'Print Orders List', 'Create New Order',
            'WIP - UPDATE Exising Order', 'WIP - DELETE Existing Order']
         art = courier_art
-        menu2(question_o,af.orders_dict,option_o,menu_type_o,courier_art,af.export_orders)
+        menu2(question_o,af.dummy_dict,option_o,menu_type_o,courier_art,af.export_orders)
         return choice_tuple  # continue to next segment
     else:
         print("You have entered an invalid command, quiting program.\n")
 
-option_D = ['Main Menu', 'DEFAULT LIST-CHECK YOUR CODE']
+option_D = ['Main Menu', '<DEFAULT LIST-CHECK YOUR CODE>'] #Debugging line
 
-def menu2(question:str=question, func_dict:dict=af.food_dict, option_list:list=option_D,menu_type:str="<PROD_TYPE>",art=food_drink_art,func_export=af.export_products):
+def menu2(question:str=question, func_dict:dict=af.dummy_dict, option_list:list=option_D,menu_type:str="<PROD_TYPE>",art=food_drink_art,func_export=af.export_products):
     # initialising choice_tuple to run the while loop on first call;
     choice_tuple = (99, 0, 0)
     # while loop stops any invalid entries passing through further down
@@ -106,17 +111,28 @@ def menu2(question:str=question, func_dict:dict=af.food_dict, option_list:list=o
         choice_tuple = printdynamic(option_list, question, food_drink_art, 0)
         #print(f"You have entered {choice_tuple}")
     # Making a break to enter a new product
-
+    
     if choice_tuple[0] == 0:
         menu1()  # back to menu1
         # choice_list.append(choice_tuple[2])
     elif choice_tuple[0] == 1:
         os.system('clear')
-        print("\n".join("{}\t{}".format(k, v) for k, v in func_dict.items()))
-        # choice_list.append(choice_tuple[2])
-        #print(f"The new choice list now looks like this {choice_list}\n")
-        input("Press any key to clear screen and return to main menu")
-        os.system('clear')
+        if menu_type == "order": #order is maintained in a master list as opposed to a dict
+            for i, _ in enumerate(orders_list):
+                print(f"This is order {i+1} of {len(orders_list)}")
+                print("\n".join(f"{k:<25}{v}" for k, v in orders_list[i].items()))
+                if i+1 ==len(orders_list):
+                    print("This is the last record")
+                else:
+                    input("Press any key to see next order")
+            input("Press any key to clear screen and return to main menu")
+            os.system('clear')
+            menu1()
+        else: #to cater for products and couriers
+            print("\n".join(f"{k:<20}{v}\n" for k, v in func_dict.items()))
+            input("Press any key to clear screen and return to main menu")
+            os.system('clear')
+            menu1()
     elif choice_tuple[0] == 2:  # do this if selecting to add new product
 
         #Initialising variables for menu3 - start
@@ -135,56 +151,69 @@ def menu2(question:str=question, func_dict:dict=af.food_dict, option_list:list=o
         return choice_tuple
 
 
-def menu3(question:str=question, # menu to add new products
-          func_dict:dict=af.food_dict, 
+def menu3(question:str=question, # menu to add new products, couriers or orders
+          func_dict:dict=af.dummy_dict, 
           menu_type:str="product",
           art=food_drink_art,
           func_export=af.export_products): 
-    # print(func_dict)
-    # choice_list = list(func_dict.keys())
-    # print(choice_list)
-    # time.sleep(3)
-    prod_list = [key for key, val in func_dict.items()]
-    choice_list = list(func_dict.keys())
-    # initialising choice_tuple to run the while loop on first call;
-    choice_tuple = (99, 0, 0)
 
-    # while loop stops any invalid entries passing through further down
-    while choice_tuple[0] >= choice_tuple[1]:
-        choice_tuple = printdynamic(prod_list, question, art, 1)
-        #print(f"You have entered {choice_tuple}")
-        # code to handle 99 break clause
-        if choice_tuple[0] == 99:
-            menu1()
-            break
-    # This coding below is to work out which category of item to add
-    for index, val in enumerate(choice_list):
-        #print(f"Assessing if choice_tuple is equal to {index} - {val}")
-        if choice_tuple[0] == index:
-            # print(
-            # f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
-            print(f"The following list is for {choice_list[index]}")
-            # cycles through all items in a particular key of food_dict
-            for index, val in enumerate(func_dict[choice_tuple[2]]):
-                print(f"{index} - {val}")
-            #print("The list of products")
-            # print(food_dict[choice_tuple[2]])
-            new_prod = input(
-                f"Please enter the {menu_type} that you would like to add\n")
-            func_dict[choice_tuple[2]].append(new_prod)
-            os.system('clear')
-            print(f"The new {menu_type} list is as below")
-            for index, val in enumerate(func_dict[choice_tuple[2]]):
-                print(f"{index} - {val}")
-            #persist the data by writing to txt file
-            func_export()
-            menu1()
-        else:
-            #print("***DEBUG NOTICE***")
-            # print(
-            #    f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
-            os.system('clear')
-            print(f"Excellent choice, {menu_type}s were definately lacking in this category.\n")
+    #included if block to cater for order
+    if menu_type == "order":
+        new_order = {}
+        new_order["customer_name"] = input("Please enter customer name\n")
+        new_order["customer_address_1"] = input("Please enter first line address\n")
+        new_order["customer_address_2"] = input("Please enter second line address\nEg: London, Amsterdam, Bogota\n")
+        new_order["customer_postcode"] = input("Please enter customer postcode\n")
+        new_order["courier_no"] = int(input("Please enter courier number\n"))
+        dt_obj = datetime.now()
+        new_order["order_time"] = f'ordertaken_{dt_obj: %Y%m%d_%H%M}', #'creating timestamp
+        new_order["status"] = "new"
+        
+        #saving the new_order into orders_list
+        orders_list.append(new_order)
+        af.export_orders(orders_list)
+        
+    else:
+        prod_list = [key for key, val in func_dict.items()]
+        choice_list = list(func_dict.keys())
+        # initialising choice_tuple to run the while loop on first call;
+        choice_tuple = (99, 0, 0)
+
+        # while loop stops any invalid entries passing through further down
+        while choice_tuple[0] >= choice_tuple[1]:
+            choice_tuple = printdynamic(prod_list, question, art, 1)
+            #print(f"You have entered {choice_tuple}")
+            # code to handle 99 break clause
+            if choice_tuple[0] == 99:
+                menu1()
+                break
+        # This coding below is to work out which category of item to add
+        for index, val in enumerate(choice_list):
+            if choice_tuple[0] == index:
+                # print(
+                # f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
+                print(f"The following list is for {choice_list[index]}")
+                # cycles through all items in a particular key of food_dict
+                for index, val in enumerate(func_dict[choice_tuple[2]]):
+                    print(f"{index} - {val}")
+                #print("The list of products")
+                # print(food_dict[choice_tuple[2]])
+                new_prod = input(
+                    f"Please enter the {menu_type} that you would like to add\n")
+                func_dict[choice_tuple[2]].append(new_prod)
+                os.system('clear')
+                print(f"The new {menu_type} list is as below")
+                for index, val in enumerate(func_dict[choice_tuple[2]]):
+                    print(f"{index} - {val}")
+                #persist the data by writing to txt file
+                func_export()
+                menu1()
+            else:
+                #print("***DEBUG NOTICE***")
+                # print(
+                #    f"Choice_tuple 0 is {choice_tuple[0]} & choice list index is {index}")
+                os.system('clear')
+                print(f"Excellent choice, {menu_type}s were definately lacking in this category.\n")
 
 
 

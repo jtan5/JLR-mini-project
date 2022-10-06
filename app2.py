@@ -26,4 +26,5 @@ from source import access_func as af
 #         time.sleep(1)
 
 #once its all good, you can uncomment the top and comment the bottom one
-main_menu.menu1()
+if __name__ == "__main__":   
+    main_menu.menu1()
