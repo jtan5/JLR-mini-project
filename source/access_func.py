@@ -15,10 +15,10 @@ def import_products():
     #sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
-    #print("Current Directory: ", current_path)
-    #print("Parent Directory: ", parent_path)
-    #products_file = os.path.join(parent_path, "products", "hot_food.txt")
-    products_path = os.path.join(parent_path, "products")
+    print("Current Directory: ", current_path)
+    print("Parent Directory: ", parent_path)
+    products_file = os.path.join(current_path, "products", "hot_food.txt")
+    products_path = os.path.join(current_path, "products")
     #print("Products_file: ", products_file)
     #print("Products_path: ", products_path)
 
@@ -45,7 +45,7 @@ def export_products():
     #sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
-    products_path = os.path.join(parent_path, "products")
+    products_path = os.path.join(current_path, "products")
     
     #getting the latest choice_list from food_dict
     choice_list = list(food_dict.keys())
@@ -77,7 +77,7 @@ def import_couriers():
     #print("Parent Directory: ", parent_path)
     #products_file = os.path.join(parent_path, "products", "hot_food.txt")
     #products_path = os.path.join(parent_path, "products")
-    couriers_path = os.path.join(parent_path, "couriers")
+    couriers_path = os.path.join(current_path, "couriers")
     #print("Products_file: ", products_file)
     #print("Products_path: ", products_path)
 
@@ -102,7 +102,7 @@ def export_couriers():
     #sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
-    couriers_path = os.path.join(parent_path, "couriers")
+    couriers_path = os.path.join(current_path, "couriers")
     
     #getting the latest choice_list from food_dict
     courier_list = list(couriers_dict.keys())
