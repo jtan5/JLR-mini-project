@@ -172,7 +172,7 @@ def menu3(question:str=question, # menu to add new products, couriers or orders
         #saving the new_order into orders_list
         orders_list.append(new_order)
         af.export_orders(orders_list)
-        
+        menu1()
     else:
         prod_list = [key for key, val in func_dict.items()]
         choice_list = list(func_dict.keys())

@@ -139,7 +139,6 @@ def import_orders(): #returns orders_list: A list of dicts
 
 
 def export_orders(orders_list=[{"Dummy Order List": "I don't know"}]):
-    print("exported orders -- haha not!!\n")
     # json_filename = f'ordertaken_{dt_obj: %Y%m%d_%H%M}'#'creating timestamp name
     json_filename = "orders"
     print(json_filename)
