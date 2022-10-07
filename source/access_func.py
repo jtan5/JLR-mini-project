@@ -44,7 +44,7 @@ def import_products(): #returns food_dict
 
 
 # module below used to presist data by exporting food_dict into txt files in products folder
-def export_products():
+def export_products(couriers_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
@@ -89,7 +89,7 @@ def import_couriers(): #returns couriers_dict
     return couriers_dict
 
 
-def export_couriers():
+def export_couriers(couriers_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)

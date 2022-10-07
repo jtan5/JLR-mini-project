@@ -121,10 +121,11 @@ def menu2(question:str=question, func_dict:dict=af.dummy_dict, option_list:list=
             for i, _ in enumerate(orders_list):
                 print(f"This is order {i+1} of {len(orders_list)}")
                 print("\n".join(f"{k:<25}{v}" for k, v in orders_list[i].items()))
+                print()
                 if i+1 ==len(orders_list):
                     print("This is the last record")
                 else:
-                    input("Press any key to see next order")
+                    input("Press any key to see next order\n")
             input("Press any key to clear screen and return to main menu")
             os.system('clear')
             menu1()
@@ -151,7 +152,7 @@ def menu2(question:str=question, func_dict:dict=af.dummy_dict, option_list:list=
         return choice_tuple
 
 
-def menu3(question:str=question, # menu to add new products, couriers or orders
+def menu3(question:str=question, # MENU TO ADD!!!!
           func_dict:dict=af.dummy_dict, 
           menu_type:str="product",
           art=food_drink_art,
@@ -206,7 +207,7 @@ def menu3(question:str=question, # menu to add new products, couriers or orders
                 for index, val in enumerate(func_dict[choice_tuple[2]]):
                     print(f"{index} - {val}")
                 #persist the data by writing to txt file
-                func_export()
+                func_export(func_dict)
                 menu1()
             else:
                 #print("***DEBUG NOTICE***")
