@@ -118,7 +118,7 @@ def menu2(question:str=question, func_dict:dict=af.dummy_dict, option_list:list=
     elif choice_tuple[0] == 1:
         os.system('clear')
         if menu_type == "order": #order is maintained in a master list as opposed to a dict
-            for i, _ in enumerate(orders_list):
+            for i, _ in enumerate(orders_list): #[ {order1}, {order2} , {order3}]
                 print(f"This is order {i+1} of {len(orders_list)}")
                 print("\n".join(f"{k:<25}{v}" for k, v in orders_list[i].items()))
                 print()

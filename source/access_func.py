@@ -44,7 +44,7 @@ def import_products(): #returns food_dict
 
 
 # module below used to presist data by exporting food_dict into txt files in products folder
-def export_products(couriers_dict=[{"Dummy Order List": "I don't know"}]):
+def export_products(courier_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
@@ -61,9 +61,9 @@ def export_products(couriers_dict=[{"Dummy Order List": "I don't know"}]):
                 file.write(product_name + '\n')
 
 
-def import_couriers(): #returns couriers_dict
+def import_couriers(): #returns courier_dict
     couriers_list = []
-    couriers_dict = {}
+    courier_dict = {}
 
     # sorting out the correct directories
     current_path = os.getcwd()
@@ -83,26 +83,26 @@ def import_couriers(): #returns couriers_dict
         with open(os.path.join(couriers_path, filename), 'r') as file:
             globals()[clean_name] = file.read().splitlines(0)
             #print(f"Final filename contents of file: {clean_name}: {globals()[clean_name]}")
-            couriers_dict[clean_name] = globals()[clean_name]
+            courier_dict[clean_name] = globals()[clean_name]
     print(
         f"Final filename contents of file: {couriers_list[-1]}: {globals()[couriers_list[-1]]}")
-    return couriers_dict
+    return courier_dict
 
 
-def export_couriers(couriers_dict=[{"Dummy Order List": "I don't know"}]):
+def export_couriers(courier_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
     couriers_path = os.path.join(current_path, "couriers")
 
     # getting the latest choice_list from food_dict
-    courier_list = list(couriers_dict.keys())
+    courier_list = list(courier_dict.keys())
 
-    for key in couriers_dict.keys():
+    for key in courier_dict.keys():
         globals()[key]
         filename = key + ".txt"
         with open(os.path.join(couriers_path, filename), 'w') as file:
-            for product_name in couriers_dict[key]:
+            for product_name in courier_dict[key]:
                 file.write(product_name + '\n')
 
 
@@ -116,14 +116,8 @@ def import_orders(): #returns orders_list: A list of dicts
 
     folder = Path('orders')
     print(folder)
-    jsonpath = folder / (json_filename + ".json")
+    jsonpath = folder / f"{json_filename}.json"
     print(jsonpath)
-
-    # jsonpath.load(json)
-
-    # #this is writing to json file!!!
-    # folder.mkdir(exist_ok=True)
-    # jsonpath.write_text(json.dumps(orders_list))
 
     # sorting out the correct directories
     current_path = os.getcwd()
@@ -132,7 +126,7 @@ def import_orders(): #returns orders_list: A list of dicts
     orders_path = os.path.join(current_path, "orders")
 
     (os.path.join(orders_path, json_filename))
-    with open(os.path.join(orders_path, json_filename + ".json"), 'r') as file:
+    with open(os.path.join(orders_path, f"{json_filename}.json"), 'r') as file:
         order_list = json.load(file)
     print(f"Order_list: {order_list}")
     return order_list
@@ -145,10 +139,8 @@ def export_orders(orders_list=[{"Dummy Order List": "I don't know"}]):
 
     folder = Path('orders')
     print(folder)
-    jsonpath = folder / (json_filename + ".json")
+    jsonpath = folder / f"{json_filename}.json"
     print(jsonpath)
-
-    # jsonpath.load(json)
 
     # this is writing to json file!!!
     folder.mkdir(exist_ok=True)
