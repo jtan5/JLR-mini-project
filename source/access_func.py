@@ -2,14 +2,91 @@
 
 import os
 import json
+import csv
 from datetime import datetime
 from pathlib import Path
 
 # initialising global variables
 dummy_dict = {"DEBUG DICT", "T1000", "Distructomatic T47"}
 
-# module below used to presist data by importing txt files from products folder
 
+####################################################################################################
+####################################################################################################
+###     IMPORT PRODUCT_CSV
+####################################################################################################
+####################################################################################################
+
+def import_product_csv():
+    # sorting out the correct directories
+    current_path = os.getcwd()
+    parent_path = os.path.dirname(current_path)
+    print("Current Directory: ", current_path)
+    print("Parent Directory: ", parent_path)
+    #products_file = os.path.join(current_path, "products", "cold_food.csv")
+    products_path = os.path.join(current_path, "products")
+    
+    choice_list = []
+    
+    global food_dict
+    food_dict = dict()
+    
+    for index, filename in enumerate(os.listdir(products_path)):
+        print("printing filename", index, filename)
+        # starting with an empty list, populating choicelist based on filenames, stripping out .csv
+        clean_name = filename.strip(".csv")
+        choice_list.append(clean_name)
+        globals()[filename.strip(".csv")] = []
+
+        #print(f"This is the choise list :{choice_list}")
+        #category_new[index] = filename.strip(".txt")
+        (os.path.join(products_path, filename))
+        with open(os.path.join(products_path, filename), 'r') as file:
+            reader_dict = csv.DictReader(file, delimiter=',')
+            for index, row in enumerate(reader_dict):
+                globals()[clean_name].append(row)
+                header = row.keys
+            #print(f"Final filename contents of file: {clean_name}: {globals()[clean_name]}")
+            food_dict[clean_name] = globals()[clean_name]
+    return food_dict
+####################################################################################################
+####################################################################################################
+###     EXPORT PRODUCT_CSV
+####################################################################################################
+####################################################################################################
+def export_product_csv(courier_dict=[{"Dummy Order List": "I don't know"}]):
+    # sorting out the correct directories
+    current_path = os.getcwd()
+    parent_path = os.path.dirname(current_path)
+    products_path = os.path.join(current_path, "products")
+
+    # getting the latest choice_list from food_dict
+    choice_list = list(food_dict.keys())
+
+    for key in food_dict.keys():
+        globals()[key]
+        filename = key + ".csv"
+        with open(os.path.join(products_path, filename), 'w') as file:
+            for product_name in food_dict[key]:
+                fieldnames1=['product_id','product_name','product_size','product_price']
+                writer = csv.DictWriter(file, fieldnames=fieldnames1)
+                writer.writeheader()
+                
+                #file.write(product_name + '\n')
+                
+                
+    # with open('people200.csv', mode='w') as file:
+    #     #it is usual to hardset the filenames, as this defines the column order
+    #     fieldnames = [' phone', 'name']
+    #     writer = csv.DictWriter(file, fieldnames=fieldnames)
+    #     writer.writeheader()
+    #     for row in lineslist:
+    #         writer.writerow(row)
+
+####################################################################################################
+####################################################################################################
+###     IMPORT PRODUCT_TXT
+####################################################################################################
+####################################################################################################
 
 def import_products(): #returns food_dict
     global choice_list
@@ -44,6 +121,11 @@ def import_products(): #returns food_dict
 
 
 # module below used to presist data by exporting food_dict into txt files in products folder
+####################################################################################################
+####################################################################################################
+###     EXPORT PRODUCT_TXT
+####################################################################################################
+####################################################################################################
 def export_products(courier_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
@@ -135,12 +217,12 @@ def import_orders(): #returns orders_list: A list of dicts
 def export_orders(orders_list=[{"Dummy Order List": "I don't know"}]):
     # json_filename = f'ordertaken_{dt_obj: %Y%m%d_%H%M}'#'creating timestamp name
     json_filename = "orders"
-    print(json_filename)
+    #print(json_filename)
 
     folder = Path('orders')
-    print(folder)
+    #print(folder)
     jsonpath = folder / f"{json_filename}.json"
-    print(jsonpath)
+    #print(jsonpath)
 
     # this is writing to json file!!!
     folder.mkdir(exist_ok=True)

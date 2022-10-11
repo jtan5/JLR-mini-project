@@ -6,3 +6,5 @@ Chicken slices
 9
 
 98 chicken
+99 chicken
+Chorizo deluxe
