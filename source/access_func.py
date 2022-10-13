@@ -33,12 +33,11 @@ def import_product_csv():
     for index, filename in enumerate(os.listdir(products_path)):
         print("printing filename", index, filename)
         # starting with an empty list, populating choicelist based on filenames, stripping out .csv
-        clean_name = filename.strip(".csv")
+        clean_name = os.path.splitext(filename)[0]
+        print(clean_name)
         choice_list.append(clean_name)
-        globals()[filename.strip(".csv")] = []
+        globals()[os.path.splitext(filename)[0]] = []
 
-        #print(f"This is the choise list :{choice_list}")
-        #category_new[index] = filename.strip(".txt")
         (os.path.join(products_path, filename))
         with open(os.path.join(products_path, filename), 'r') as file:
             reader_dict = csv.DictReader(file, delimiter=',')
@@ -53,25 +52,28 @@ def import_product_csv():
 ###     EXPORT PRODUCT_CSV
 ####################################################################################################
 ####################################################################################################
-def export_product_csv(courier_dict=[{"Dummy Order List": "I don't know"}]):
+def export_product_csv(func_dict=[{"Dummy Order List": "I don't know"}]):
     # sorting out the correct directories
     current_path = os.getcwd()
     parent_path = os.path.dirname(current_path)
     products_path = os.path.join(current_path, "products")
 
     # getting the latest choice_list from food_dict
-    choice_list = list(food_dict.keys())
+    choice_list = list(func_dict.keys())
 
-    for key in food_dict.keys():
+    for key in func_dict.keys():
         globals()[key]
         filename = key + ".csv"
         with open(os.path.join(products_path, filename), 'w') as file:
-            for product_name in food_dict[key]:
-                fieldnames1=['product_id','product_name','product_size','product_price']
+            for product_name in func_dict[key]:
+                fieldnames1=['product_id','product_size','product_price','product_name']
                 writer = csv.DictWriter(file, fieldnames=fieldnames1)
                 writer.writeheader()
-                
-                #file.write(product_name + '\n')
+                for row in func_dict[key]:
+                    entry = f"{row['product_id']},{row['product_size']},{row['product_price']},{row['product_name']}"
+                    #print(f"{row['product_id']},{row['product_size']},{row['product_price']},{row['product_name']}")
+                    writer.writerow(entry)
+
                 
                 
     # with open('people200.csv', mode='w') as file:
