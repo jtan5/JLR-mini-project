@@ -1,8 +1,7 @@
-import sys
-import time
-import os
+# menu  package installed in your venv, globally, user space
 from source import menu
-from source import access_func as af
+
+
 
 
 #DB_FILE = "./db/caffe.sql"

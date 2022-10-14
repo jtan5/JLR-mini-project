@@ -6,6 +6,8 @@ import csv
 from datetime import datetime
 from pathlib import Path
 
+from source.db_functions import read_from_db
+
 # initialising global variables
 dummy_dict = {"DEBUG DICT", "T1000", "Distructomatic T47"}
 
@@ -47,6 +49,38 @@ def import_product_csv():
             #print(f"Final filename contents of file: {clean_name}: {globals()[clean_name]}")
             food_dict[clean_name] = globals()[clean_name]
     return food_dict
+
+####################################################################################################
+####################################################################################################
+###     IMPORT PRODUCT_DB
+####################################################################################################
+####################################################################################################
+
+def import_product_db():   
+    sql=("""
+            SELECT
+            product_id,
+            product_size,
+            unit_price,
+            product_name
+            from products""")
+    return read_from_db(sql)
+
+####################################################################################################
+####################################################################################################
+###     IMPORT COURIER_DB
+####################################################################################################
+####################################################################################################
+
+def import_courier_db():   
+    sql=("""
+            SELECT
+            courier_id,
+            courier_name,
+            courier_phone_number,
+            servicing_area
+            from couriers""")
+    return read_from_db(sql)
 ####################################################################################################
 ####################################################################################################
 ###     EXPORT PRODUCT_CSV

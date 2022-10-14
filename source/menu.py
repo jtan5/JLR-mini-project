@@ -5,6 +5,10 @@ import random
 from pathlib import Path
 from datetime import datetime
 from traceback import print_list
+from unicodedata import category
+import phonenumbers
+from phonenumbers import carrier
+from phonenumbers.phonenumberutil import number_type
  
 
 os.path.abspath(__file__)
@@ -13,12 +17,15 @@ print(current_path)
 sys.path.append(os.path.dirname(__file__))
 print(sys.path)
 import access_func as af
+from db_functions import execute_query, execute_query2, insert_product, insert_courier, read_from_db, get_unique_id
 
 #these will automatically populate once the program runs
-#food_dict = af.import_products()#      #function returns food_dict
-food_dict = af.import_product_csv()  
+#product_dict = af.import_products()#      #function returns product_dict
+product_dict = af.import_product_db()  
 courier_dict = af.import_couriers()    #function returns couriers dict
 orders_list = af.import_orders()        #function returns orders_list
+
+
 
 # Images
 food_drink_art = """
@@ -48,7 +55,18 @@ order_art = '''
     /:::=======:::\`\`\\
     `"""""""""""""`  '-'
 '''
-
+area_art = '''
+        _____
+    ,-:` \;',`'-, 
+  .'-;_,;  ':-;_,'.
+ /;   '/    ,  _`.-\\
+| '`. (`     /` ` \`|
+|:.  `\`-.   \_   / |
+|     (   `,  .`\ ;'|
+ \     | .'     `-'/
+  `.   ;/        .'
+    `'-._____.-'
+'''
 new_product_art = '''
  ██████╗██████╗ ███████╗ █████╗ ████████╗███████╗    ███╗   ██╗███████╗██╗    ██╗    ██████╗ ██████╗  ██████╗ ██████╗ ██╗   ██╗ ██████╗████████╗
 ██╔════╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝    ████╗  ██║██╔════╝██║    ██║    ██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██║   ██║██╔════╝╚══██╔══╝
@@ -99,16 +117,11 @@ def print_list_of_dict_non_order(func_list):
         #print(f"This is order {i+1} of {len(func_list)}")
         print("\t".join(f"{k}:{v}" for k, v in func_list[i].items()))
 
-    
-    
-
-    
-
             
 def print_list_of_dict(func_list): #use for order
     for i, _ in enumerate(func_list): #[ {order1}, {order2} , {order3}]
         print(f"This is order {i+1} of {len(func_list)}")
-        print("\n".join(f"{k:<25}{v}" for k, v in func_list[i].items()))
+        print("\n".join(f"{k:<25}{v}\t" for k, v in func_list[i].items()))
         print()
         if i+1 ==len(func_list):
             print("This is the last record")
@@ -118,6 +131,7 @@ def print_list_of_dict(func_list): #use for order
 
 
 def main_menu():
+ 
     os.system('clear')
     print(food_drink_art)
     print("Welcome to the Bootcamp Cafe Setup Page\n")
@@ -157,35 +171,35 @@ def main_menu():
     
 def product_menu():
 
-    #food_dict = af.import_products()
-    unique_dict = food_dict
-    unique_string = "product"
+    unique_dict = af.import_product_db() 
+    category = "product"
     unique_list = ['Main Menu', 
-                   f'Print {unique_string.title()} List', 
-                   f'Create New {unique_string.title()}',          
-                   f'UPDATE Exising {unique_string.title()}', 
-                   f'DELETE Existing {unique_string.title()}']
+                   f'Print {category.title()} List', 
+                   f'Create New {category.title()}',          
+                   f'UPDATE Exising {category.title()}', 
+                   f'DELETE Existing {category.title()}']
 
     os.system('clear')
-    print(f"This is the {unique_string}s menu\n")
+    print(f"This is the {category}s menu\n")
     choice = selection_catcher(unique_list,message = "PRODUCT MENU\n",include_99=0,art=food_drink_art)
     if choice == 0: #returning to main menu
         main_menu()
     if choice == 1: #printing items
         os.system('clear')
-        print_dict_complex(unique_dict)
+        print_list_of_dict_non_order(unique_dict)
+        input("Press any key to go back to the main menu\n")
         main_menu()
         return choice
     if choice ==2:  #adding item
-        new_menu(unique_dict,unique_string)
+        new_item(unique_dict,category)
         main_menu()
         return choice
     if choice ==3:  #editing item
-        update_menu()
+        update_product()
         main_menu()
         return choice
     if choice ==4:  #deleting item
-        delete_menu()
+        delete_product()
         main_menu()
         return choice
 
@@ -193,32 +207,33 @@ def product_menu():
 
 
 def courier_menu():
-    #food_dict = af.import_products()
-    unique_dict = courier_dict
-    unique_string = "courier"
-    unique_list = ['Main Menu', f'Print {unique_string.title()} List', f'Create New {unique_string.title()}',
-          f'UPDATE Exising {unique_string.title()}', f'DELETE Existing {unique_string.title()}']
+
+    unique_dict = af.import_courier_db() 
+    category = "courier"
+    unique_list = ['Main Menu', f'Print {category.title()} List', f'Create New {category.title()}',
+          f'UPDATE Exising {category.title()}', f'DELETE Existing {category.title()}']
 
     os.system('clear')
-    print(f"This is the {unique_string}s menu\n")
+    print(f"This is the {category}s menu\n")
     choice = selection_catcher(unique_list,message = "COURIER MENU",include_99=0,art=courier_art)
     if choice == 0: #returning to main menu
         main_menu()
     if choice == 1: #printing items
         os.system('clear')
-        print_dict(unique_dict)
+        print_list_of_dict_non_order(unique_dict)
+        input("Press any key to go back to the main menu\n")
         main_menu()
         return choice
     if choice ==2:  #adding item
-        new_menu(unique_dict,unique_string)
+        new_item(unique_dict,category)
         main_menu()
         return choice
     if choice ==3:  #editing item
-        update_menu()
+        update_product()
         main_menu()
         return choice
     if choice ==4:  #deleting item
-        delete_menu()
+        delete_product()
         main_menu()
         return choice
 ####################################################################################################
@@ -229,12 +244,12 @@ def courier_menu():
 def order_menu():
     os.system('clear')
     print(order_art)
-    unique_string = "order"
-    print(f"This is the {unique_string}s menu\n")
-    unique_list = ['Main Menu', f'Print {unique_string.title()} List', f'Create New {unique_string.title()}',
-          f'UPDATE Exising {unique_string.title()}', f'DELETE Existing {unique_string.title()}']
+    category = "order"
+    print(f"This is the {category}s menu\n")
+    unique_list = ['Main Menu', f'Print {category.title()} List', f'Create New {category.title()}',
+          f'UPDATE Exising {category.title()}', f'DELETE Existing {category.title()}']
     os.system('clear')
-    print(f"This is the {unique_string}s menu\n")
+    print(f"This is the {category}s menu\n")
     choice = selection_catcher(unique_list,message = "ORDERS MENU",include_99=0,art=order_art)
     if choice == 0: #returning to main menu
         main_menu()
@@ -244,7 +259,7 @@ def order_menu():
         main_menu()
         return choice
     if choice ==2:  #adding item
-        new_order(orders_list,unique_string)
+        new_order(orders_list,category)
         main_menu()
         return choice
     if choice ==3:  #editing item
@@ -263,47 +278,77 @@ def order_menu():
 
 ####################################################################################################
 ####################################################################################################
-###     APPEND MENU - PRODUCT AND COURIER
+###     APPEND MENU - PRODUCT OR COURIER
 ####################################################################################################
 ####################################################################################################
 
-def new_menu(unique_dict,category: str = None): #use for products and couriers
-    #initialising choice_list
-    choice_list = list(unique_dict.keys())
+def new_item(unique_dict,category:str): #category = "product", "courier", "order"
+
     os.system('clear')
-    if category == "courier":
-        print(new_courier_art)
+    if category == "product":
+        art = new_product_art
+        print(art)
+        print_list_of_dict_non_order(unique_dict)
+        new_item_name, new_item_size, new_item_price = new_product_questions()#write new items to database
+        insert_product(new_item_name,new_item_size,new_item_price)
+        
+    elif category == "courier":
+        art = new_courier_art
+        print(art)
+        print_list_of_dict_non_order(unique_dict)
+        new_item_name, new_item_number, new_item_capacity = new_courier_questions()#write new items to database
+        insert_courier(new_item_name, new_item_number, new_item_capacity)
     else:
-        print(new_product_art)
+        art = order_art
+        print(art)
+        print_list_of_dict_non_order(unique_dict)
+        number = get_unique_id(new_item_name,"product")
+        print (number)
 
-    choice = selection_catcher(choice_list,
-                               message = f"Please select the subset of {category} you would like to add",include_99=1)
-    # print(choice)
-    # print(choice_list[choice])
-    # input("WAIT")
-    selection = choice_list[choice]
-    print(f"You have selected: {selection}")
-    print_dynamic_list(unique_dict[selection])
-    new_item = input(f"Please enter the name of the {category} you would like to add\n")
-    if new_item =="": #no blank catcher
-        print("You cannot add a blank product, please type in a meaningful name for this product")
-        print("You will be redirected to select the subset again")
-        time.sleep(2)
-        new_menu(unique_dict,category)
-    else:
-        unique_dict[selection].append(new_item)
-        os.system('clear')
-        #persist the data by writing to txt file
-        af.export_product_csv(unique_dict)
-        print(f"{category.title()} has been successfully updated")
-        print(f"The new {category} list is as below")
-        print_dict(unique_dict)
-        main_menu()
-            # This coding below is to work out which category of item to add
+    input("Press any key to go back to the main menu\n")
+    main_menu()
 
 
-
-
+####################################################################################################
+####################################################################################################
+###     NEW PRODUCT QUESTION
+####################################################################################################
+####################################################################################################
+def new_product_questions():
+    question = "Please enter name of product you would like to add"
+    new_item_name = blank_catcher(question)
+    question = "Please enter size of product you would like to add\nEnter N/A if not applicable"
+    new_item_size = blank_catcher(question)
+    question = "Please enter price of product you would like to add"
+    new_item_price = price_catcher(question)
+    return new_item_name, new_item_size, new_item_price
+####################################################################################################
+####################################################################################################
+###     NEW COURIER QUESTION
+####################################################################################################
+####################################################################################################
+def new_courier_questions():
+    question = "Please enter courier name"
+    new_item_name = blank_catcher(question)
+    question = "Please enter courier number"
+    new_item_number = phone_catcher()
+    areas = ["Greater London", "West Midlands", "District-9", "Area-51"]
+    question = "Please enter the servicing area for deliveries"
+    servicing_area = areas[selection_catcher(areas,question,0,area_art)]
+    return new_item_name, new_item_number, servicing_area
+####################################################################################################
+####################################################################################################
+###     NEW ORDER QUESTION
+####################################################################################################
+####################################################################################################
+def new_order_questions():
+    question = "Please enter courier name"
+    new_item_name = blank_catcher(question)
+    question = "Please enter courier number"
+    new_item_number = int_catcher(question)
+    question = "Please enter max order capacity per order"
+    new_item_capacity = int_catcher(question)
+    return new_item_name, new_item_number, new_item_capacity
 ####################################################################################################
 ####################################################################################################
 ###     APPEND MENU - ORDER
@@ -332,10 +377,10 @@ def new_order(orders_list,category: str = None): #use for orders only
 
 
     
-def update_menu():
+def update_product():
     pass
 
-def delete_menu():
+def delete_product():
     pass
 
         
@@ -394,3 +439,87 @@ def selection_catcher(func_list: list,message: str,include_99=1,art=None):
         main_menu()
     else:
         return choice
+    
+####################################################################################################
+####################################################################################################
+###     BLANK CATCHER
+####################################################################################################
+####################################################################################################
+def blank_catcher(message: str):
+    new_item = ""
+    while new_item == "": #no blank catcher
+        new_item = input(f"{message}\n")
+    return new_item
+
+####################################################################################################
+####################################################################################################
+###     PRICE CATCHER
+####################################################################################################
+####################################################################################################
+def price_catcher(message: str):
+    new_item = ""
+    while new_item == "": #no blank catchertry: 
+        try:
+            new_item = float(input(f"{message}\n"))
+        except ValueError:
+            os.system('clear')
+            print('You have entered a non-numerical / blank value\n\n\n')
+            print("Menu will load shortly...")
+            time.sleep(2)
+    return new_item
+
+####################################################################################################
+####################################################################################################
+###     INT CATCHER
+####################################################################################################
+####################################################################################################
+def int_catcher(message: str):
+    new_item = ""
+    while new_item == "": #no blank catchertry: 
+        try:
+            new_item = int(input(f"{message}\n"))
+        except ValueError:
+            os.system('clear')
+            print('You have entered a non-numerical / blank value\n\n\n')
+            print("Menu will load shortly...")
+            time.sleep(2)
+    return new_item
+####################################################################################################
+####################################################################################################
+###     PHONE CATCHER
+####################################################################################################
+####################################################################################################
+def phone_catcher():
+    try:
+        #number = "+447939418683"
+        number = input("Please enter courier mobile phone number by beginning with the country code\neg: +447123456789\n")
+        mobile_number = carrier._is_mobile(number_type(phonenumbers.parse(number)))
+    except Exception as e:
+        print(f"Error with phone number, error code: {e}")
+        time.sleep(2)
+        phone_catcher()
+    if mobile_number is True:
+        number = number.replace(" ","")
+        print(number)
+        return number
+    else:
+        print(f"The phone number you have entered is not a valid mobile number, please re-enter\nEntry screen will reload shortly...")
+        time.sleep(2)
+        phone_catcher()
+####################################################################################################
+####################################################################################################
+###     SERVICING AREA CATCHER
+####################################################################################################
+####################################################################################################
+def servicing_area_catcher():
+    areas = ["Greater London", "West Midlands", "District-9", "Area-51"]
+    print_list(areas)
+    while new_item == "": #no blank catchertry: 
+        try:
+            new_item = float(input(f"{message}\n"))
+        except ValueError:
+            os.system('clear')
+            print('You have entered a non-numerical / blank value\n\n\n')
+            print("Menu will load shortly...")
+            time.sleep(2)
+    return new_item
