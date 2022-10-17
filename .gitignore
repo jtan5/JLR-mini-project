@@ -3,3 +3,4 @@ Exercises
 source/__pycache__/
 /benham-project
 .env
+.pylintrc
