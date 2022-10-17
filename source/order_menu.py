@@ -29,6 +29,8 @@ def get_customer_id():
 ###     NEW CUSTOMER ENTRY
 ####################################################################################################
 def new_customer_entry():
+    os.system("clear")
+    print(new_customer_art)
     question = "Please enter customer name"
     name = blank_catcher(question)
     question = "Please enter customer address"
@@ -87,7 +89,6 @@ def get_order_products(order_id: int, customer_id: int, courier_id: int):
     #create op_dict - this is to track all products to attach to this order
     op_list = []
     
-    
     product_list = af.import_product_db()
     product_add = 1#counter to keep looping to add products
     while product_add == 1:
@@ -97,7 +98,7 @@ def get_order_products(order_id: int, customer_id: int, courier_id: int):
         os.system('clear')
         #print_list_of_dict_selection(product_list) #displaying product list for selection
         question = "Please select a product to add to this order"
-        prod_choice = selection_catcher_dict(product_list,question,0,food_drink_art)
+        prod_choice = selection_catcher_dict(product_list,question,0,new_order_art)
         quantity_question = f"Please enter the quantity of {product_list[prod_choice]['product_name']} you would like to order"
         q_choice = int_catcher(quantity_question)
         #logic to compare the quantity vs stock

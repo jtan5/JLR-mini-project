@@ -211,6 +211,8 @@ def new_item(unique_list_of_dict,category:str): #category = "product", "courier"
 ####################################################################################################
 ####################################################################################################
 def new_product_questions():
+    os.system("clear")
+    print(new_product_art)
     question = "Please enter name of product you would like to add"
     new_item_name = blank_catcher(question)
     question = "Please enter stock amount"
@@ -224,6 +226,8 @@ def new_product_questions():
 ####################################################################################################
 ####################################################################################################
 def new_courier_questions():
+    os.system("clear")
+    print(new_courier_art)
     question = "Please enter courier name"
     new_item_name = blank_catcher(question)
     question = "Please enter courier number"
@@ -243,31 +247,31 @@ def delete_product():
     pass
 
         
-def random_courier(courier_list_of_dict):
-    courier_list = list(courier_list_of_dict.keys())
-    choice = selection_catcher(courier_list,message = "Please select the servicing area closest to your delivery location\n",include_99=1)
-    selection = courier_list[choice]
-    print(f"You have selected: {selection}")
-    time.sleep(1)
-    print(f"All couriers from {selection} listed below:\n")
-    print_dynamic_list(courier_list_of_dict[selection])
-    os.system("clear")
-    print("Assigning a courier to your order...")
-    time.sleep(1)
-    print(".")
-    time.sleep(1)
-    print("..")
-    time.sleep(1)
-    print("...")
-    time.sleep(1)
-    os.system("clear")
-    print("Courier found...")
-    time.sleep(1)
-    os.system("clear")
-    random_courier = random.randint(0, len(courier_list_of_dict[selection]))
-    #print (f"Random courier: {random_courier}")
-    print(f"Thank you for your order... \n\n\nCourier {courier_list_of_dict[selection][random_courier]} from {selection} has been assigned to your order.")
-    return f"{selection},{courier_list_of_dict[selection][random_courier]}"
+# def random_courier(courier_list_of_dict):
+#     courier_list = list(courier_list_of_dict.keys())
+#     choice = selection_catcher(courier_list,message = "Please select the servicing area closest to your delivery location\n",include_99=1)
+#     selection = courier_list[choice]
+#     print(f"You have selected: {selection}")
+#     time.sleep(1)
+#     print(f"All couriers from {selection} listed below:\n")
+#     print_dynamic_list(courier_list_of_dict[selection])
+#     os.system("clear")
+#     print("Assigning a courier to your order...")
+#     time.sleep(1)
+#     print(".")
+#     time.sleep(1)
+#     print("..")
+#     time.sleep(1)
+#     print("...")
+#     time.sleep(1)
+#     os.system("clear")
+#     print("Courier found...")
+#     time.sleep(1)
+#     os.system("clear")
+#     random_courier = random.randint(0, len(courier_list_of_dict[selection]))
+#     #print (f"Random courier: {random_courier}")
+#     print(f"Thank you for your order... \n\n\nCourier {courier_list_of_dict[selection][random_courier]} from {selection} has been assigned to your order.")
+#     return f"{selection},{courier_list_of_dict[selection][random_courier]}"
 
 
 
