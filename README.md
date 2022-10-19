@@ -7,5 +7,5 @@
 4. Reducing stock amount based on new order
 
 # What is not yet supported
-1. Appending products / courier / order
+1. Updating products / courier / order
 2. Removing products / courier / order

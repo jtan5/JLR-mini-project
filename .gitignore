@@ -4,3 +4,5 @@ source/__pycache__/
 /benham-project
 .env
 .pylintrc
+jupyter_notebook
+.coverage

@@ -1,12 +1,16 @@
 # this module generally controls the opening and closing of files and the mappings
 
+from logging import exception
 import os
 import json
 import csv
 from datetime import datetime
 from pathlib import Path
+import string
 import pymysql
 from pymysql.constants import CLIENT
+import pymysql.cursors
+
 from dotenv import load_dotenv
 load_dotenv()
 host = os.environ.get("mysql_host")
@@ -14,13 +18,44 @@ user = os.environ.get("mysql_user")
 password = os.environ.get("mysql_pass")
 database = os.environ.get("mysql_db")
 
-#from source.db_functions import read_from_db
+# Connect to the database
+# connection = pymysql.connect(
+#     host=host,
+#     user=user,
+#     password=password,
+#     database=database,
+#     client_flag=CLIENT.MULTI_STATEMENTS,
+# )
 
-# initialising global variables
-#dummy_dict = {"DEBUG DICT", "T1000", "Distructomatic T47"}
 
 
 
+####################################################################################################
+###     INITIALISE DB
+####################################################################################################
+
+def initialize_db(sql_file_path):
+    with open(sql_file_path, "r") as f:
+        query = f.read()
+        execute_on_db(query)
+
+
+####################################################################################################
+###     EXECUTE ON DB
+####################################################################################################
+def execute_on_db(query):
+#Connect to the database
+    connection = pymysql.connect(
+    host=host,
+    user=user,
+    password=password,
+    database=database,
+    client_flag=CLIENT.MULTI_STATEMENTS,
+)
+    cursor = connection.cursor()
+    cursor.execute(query)
+    connection.commit()
+    
 ####################################################################################################
 ####################################################################################################
 ###     IMPORT PRODUCT_DB
@@ -33,7 +68,8 @@ def import_product_db():
             product_name,
             unit_price,
             stock,
-            product_id
+            product_id,
+            product_size
             from products""")
     return read_from_db(sql)
 
@@ -101,11 +137,17 @@ def create_connection():
 ###    EXECUTE_QUERY
 ####################################################################################################
 def execute_query(query):
-    connection = create_connection()
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        connection.commit()
-    return True
+    try:
+        connection = create_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            connection.commit()
+        return True
+    except Exception as e:
+        if e[0] == 1451:
+            print("There is a dependency associated with this element; please check there are no open orders associated with this element.")
+        else:
+            print(e)
 
 def read_from_db(query):
     connection = create_connection()
@@ -117,14 +159,14 @@ def read_from_db(query):
 ####################################################################################################
 ###    INSERT_PRODUCT
 ####################################################################################################
-def insert_product(product_name,stock,unit_price):
+def insert_product(product_name,stock,unit_price,product_size):
     query = f"""
-        INSERT INTO products (product_name, stock, unit_price)
+        INSERT INTO products (product_name, stock, unit_price, product_size)
         VALUES
-        ('{product_name}',{stock},{unit_price})
+        ('{product_name}',{stock},{unit_price},'{product_size}')
         """
     execute_query(query)
-    print("New items successfully saved to database")
+    #print("New items successfully saved to database")
     return True
 ####################################################################################################
 ###    GET_UNIQUE_ID
@@ -151,7 +193,7 @@ def insert_courier(new_item_name, new_item_number, servicing_area):
         ('{new_item_name}','{new_item_number}','{servicing_area}',1)
         """
     execute_query(query)
-    print("New items successfully saved to database")
+    #print("New items successfully saved to database")
     return True
 ####################################################################################################
 ###    INSERT_CUSTOMER
@@ -163,7 +205,7 @@ def insert_customer(name, address, postcode, servicing_area):
         ('{name}','{address}','{postcode}','{servicing_area}')
         """
     execute_query(query)
-    print("New items successfully saved to database")
+    #print("New items successfully saved to database")
     return True
 ####################################################################################################
 ###    GET_NEW_CUSTOMER_ID
@@ -298,7 +340,9 @@ def return_invoice_total(order_id:int):
     output = read_from_db(query)
     return output[0]['total_amount_due']
 
-
+####################################################################################################
+###    RETURN ORDER STATUS
+####################################################################################################
 def return_order_status(order_status: str):
     query = f"""
             select 
@@ -313,7 +357,9 @@ def return_order_status(order_status: str):
             LEFT JOIN couriers c ON (op.courier_id = c.courier_id)
             where o.order_status = '{order_status}';"""
     return read_from_db(query)
-
+####################################################################################################
+###    RETURN ORDER STATUS ALL
+####################################################################################################
 def return_order_status_all():
     query = f"""
             select 
@@ -328,9 +374,61 @@ def return_order_status_all():
             LEFT JOIN couriers c ON (op.courier_id = c.courier_id)
             """
     return read_from_db(query)
-
+####################################################################################################
+###    UPDATE ORDER STATUS
+####################################################################################################
 def update_status(order_id:int, status:str):
     query = f"""
             UPDATE orders SET order_status = "{status}" WHERE(order_id = {order_id});"""
     execute_query(query)
     return True
+####################################################################################################
+###    UPDATE ITEM STATUS
+####################################################################################################
+def change_item(update_list:list, category:str):
+    for i, _ in enumerate(update_list):
+        query_body = ""
+        query_header = f"""UPDATE {category}s SET """
+
+        ki = 0
+        for k,v in update_list[i].items():
+            if ki < len(update_list[i])- 2: #removing a k:v pair for the item_id
+                comma_status = ","
+            else:
+                comma_status = ""
+            if k != f"{category}_id":
+                if isinstance(v, str):
+                    query_body = f"{query_body} {k}='{v}'{comma_status}"
+                else:
+                    query_body = f"{query_body} {k}={v}{comma_status}"
+            else: # when its item_id
+                query_footer = f"WHERE {category}_id IN ({v})"
+            ki += 1
+        #assembly query here
+        final_query = f'{query_header} {query_body} {query_footer}'
+        print(final_query)
+        execute_query(final_query)
+        #run upload here
+
+    #query to mimic =f """UPDATE products
+	#                       SET 
+	# 	                        product_size = "S",
+    #                           unit_price = 1.02,
+    #                           stock = 49,
+    #                           product_name = "Chips"
+	# 	                    WHERE product_id IN (3);"
+ 
+ 
+ 
+ 
+####################################################################################################
+###    DELETING CUSTOMER 
+####################################################################################################
+def test_query():
+    try:
+        query = "DELETE FROM `cafe_db`.`customers` WHERE (`customer_id` = '10');"
+        execute_query(query)
+        return True
+    except Exception as e:
+        print (e)
+        
