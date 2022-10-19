@@ -1,7 +1,7 @@
 import os
 import random
 from . import access_func as af
-from .functions import yes_no_catcher, servicing_area_catcher, print_list_of_dict, print_list_of_dict_selection, selection_catcher, selection_catcher_dict, blank_catcher, price_catcher, phone_catcher, int_catcher
+from .functions import print_dict, yes_no_catcher, servicing_area_catcher, print_list_of_dict, print_list_of_dict_selection, selection_catcher, selection_catcher_dict, blank_catcher, price_catcher, phone_catcher, int_catcher
 from .art import food_drink_art, order_art, courier_art, area_art, customer_art, new_product_art, new_courier_art, new_order_art, new_customer_art
 ####################################################################################################
 ###     GET CUSTOMER ID
@@ -219,9 +219,13 @@ def changing_order_status():
     order_id = orders_list[choice]["order_id"]
     old_status = orders_list[choice]["order_status"]
     #get new status
+    print("You are now changing the status of the order below")
+    print_dict(orders_list[choice])
     new_status = order_status_catcher()
     push_update = af.update_status(order_id,new_status)
     if push_update is True:
         print(f"Order ID: {order_id} has been successfully changed from {old_status} to {new_status}")
+    
     else:
         print("Something went wrong with pushing the data to MYSQL\nTry again later.")
+    return push_update
