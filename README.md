@@ -1,7 +1,6 @@
 
-# JLR DATA ENGINEERING BOOTCAMP CAFE
-# MINI PROJECT by JON TAN
-##
+# JLR DATA ENGINEERING BOOTCAMP CAFE MINI PROJECT
+## by JON TAN
 
 ## What is this and how should it be used?
 When activated, this application will allow the user to use a python command line interface to insert new orders, products, customers and couriers into the mySQL database. The mySQL database is assumed to be running on the same machine that the user is using the python interface with.
