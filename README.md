@@ -75,7 +75,7 @@ coverage run -m pytest ./tests
 ## What's planned for future releases?
 The plan is to make this more robust and fit for purpose for a volunteering organisation which is in need of a simple free database solution.
 
-## How does this application do the cool stuff like below?
+## Q&A on how does this application works
 1. How does python know what the <b>order_id</b> is before mySQL assigns it?
 <br>It assigns a random integer between the limits allowed by mySQL: -2147483648 to 2147483647
 
