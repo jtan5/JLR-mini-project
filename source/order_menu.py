@@ -229,7 +229,7 @@ def changing_order_status():
     orders_list = af.return_order_status_all()
     os.system("clear")
     question = "Select order that you would like to change status"
-    choice = selection_catcher_dict(orders_list,question,order_art)
+    choice = selection_catcher_dict(orders_list,question,"")
     order_id = orders_list[choice]["order_id"]
     old_status = orders_list[choice]["order_status"]
     #get new status
