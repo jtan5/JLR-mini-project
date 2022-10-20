@@ -1,0 +1,26 @@
+product_id,product_size,unit_price,stock,product_name
+1,S,1.00,60,Coke
+2,S,9.99,49,Burger
+3,S,1.02,49,Chips
+4,S,0.99,30,Wasabi
+6,S,3.99,49,Watermelon
+7,L,2.22,44,California roll
+8,S,3.55,48,Salmon sushi
+9,S,9.44,50,Tuna roll
+10,M,85.55,47,Sharkfin soup
+11,S,0.99,45,Spicy chips
+12,N/A,9.99,35,Altair water
+13,S,0.99,15,Lobsters chips
+14,S,0.99,47,Banana crisps
+15,M,1.99,50,Watermelon seeds
+16,S,4.99,47,Peppa pig icecream
+17,N/A,5.99,47,Mint icecream
+18,N/A,0.55,48,Square biscuit
+19,N/A,5.50,38,Round biscuit
+20,N/A,1.99,48,Earl Grey
+21,M,1.99,31,Latte
+22,M,4.99,48,Mango shake
+23,M,2.99,41,Steak slice
+24,L,85.50,45,Altair hypercoffee
+25,L,1.00,45,Salted peanuts
+28,S,2.00,40,Espresso

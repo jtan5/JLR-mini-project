@@ -1,6 +1,7 @@
 # this module generally controls the opening and closing of files and the mappings
 
 from logging import exception
+import csv
 import os
 import json
 import csv
@@ -12,6 +13,7 @@ from pymysql.constants import CLIENT
 import pymysql.cursors
 
 from dotenv import load_dotenv
+
 
 load_dotenv()
 host = os.environ.get("mysql_host")
@@ -146,12 +148,14 @@ def execute_query(query):
         return True
     except connection.IntegrityError as e:
         print("#############################################################################")
-        print("IntegrityError", e)
+        #print("IntegrityError", e)
+        print("You have tried to delete an item with a dependencies")
+        print("Note the following dependencies:")
+        print("Orders has to be deleted before customers / products")
         print()
         print()
         print("#############################################################################")
-        print("Note the following dependencies:")
-        print("Orders has to be deleted before customers")
+
         return False
     except Exception as e:
         print(e)
@@ -300,9 +304,9 @@ def get_customer_servicing_area(customer_id):
 def update_stock(order_products_list: list):
     #create new query based on len of list
     for i, _ in enumerate(order_products_list):
-        query = f"""update products set stock = stock-{order_products_list[i]['product_quantity']} where product_id = {order_products_list[i]['product_id']};"""
-        return execute_query(query)
-
+        query = f"""update products set stock = stock-{order_products_list[i]['product_quantity']} where product_id = {order_products_list[i]['product_id']}"""
+        a = execute_query(query)
+    return a
 
 ####################################################################################################
 ####################################################################################################
@@ -477,4 +481,71 @@ def delete_item_db(update_list:list, category):
         final_query = f'{query_header} {query_footer}'
         #print(final_query)
         return execute_query(final_query)
-        
+    
+####################################################################################################
+###    SAVING DATA CSV
+####################################################################################################
+def save_data_csv(item_name: str):
+    # sorting out the correct directories
+    current_path = os.getcwd()
+    parent_path = os.path.dirname(current_path)
+    #print("Current Directory: ", current_path)
+    #print("Parent Directory: ", parent_path)
+
+    """ Saving data to CSV """
+    path = f"{current_path}/data/{item_name}.csv"
+    if item_name == "products":
+        sql = """  select * FROM products"""
+        rows = read_from_db(sql)
+        #print(rows)
+        header = rows[0].keys()
+        with open(os.path.join(os.path.dirname(__file__), path), 'w', newline='') as file:
+            writer = csv.DictWriter(file,fieldnames = header)
+            writer.writeheader()
+            writer.writerows(rows)
+            file.close()
+    elif item_name == "couriers":
+        sql = """  SELECT * FROM couriers """
+        rows = read_from_db(sql)
+        #print(rows)
+        header = rows[0].keys()
+        with open(os.path.join(os.path.dirname(__file__), path), 'w', newline='') as file:
+            writer = csv.DictWriter(file,fieldnames = header)
+            writer.writeheader()
+            writer.writerows(rows)
+            file.close()
+    elif item_name == "customers":
+        sql = """  SELECT * FROM customers """
+        rows = read_from_db(sql)
+        #print(rows)
+        header = rows[0].keys()
+        with open(os.path.join(os.path.dirname(__file__), path), 'w', newline='') as file:
+            writer = csv.DictWriter(file,fieldnames = header)
+            writer.writeheader()
+            writer.writerows(rows)
+            file.close()
+    elif item_name == "orders":
+        sql = """select 
+            op.order_id,
+            o.order_status,
+            cu.customer_name,
+            c.courier_name,
+            p.product_name,
+            op.product_quantity as quantity,
+            p.unit_price * op.product_quantity as subtotal,
+            round(p.unit_price * op.product_quantity * 0.2,2) as itemVAT,
+            round(p.unit_price * op.product_quantity * 1.2,2) as total_inc_VAT
+            FROM order_prod op
+            LEFT JOIN customers cu ON (op.customer_id = cu.customer_id)
+            LEFT JOIN orders o ON (op.order_id = o.order_id)
+            LEFT JOIN products p ON (op.product_id = p.product_id)
+            LEFT JOIN couriers c ON (op.courier_id = c.courier_id) """
+        rows = read_from_db(sql)
+        #print(rows)
+        header = rows[0].keys()
+        with open(os.path.join(os.path.dirname(__file__), path), 'w', newline='') as file:
+            writer = csv.DictWriter(file,fieldnames = header)
+            writer.writeheader()
+            writer.writerows(rows)
+            file.close()
+            

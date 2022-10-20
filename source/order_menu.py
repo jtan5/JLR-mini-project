@@ -1,5 +1,7 @@
 import os
 import random
+import copy
+import time
 from . import access_func as af
 from .functions import print_dict, yes_no_catcher, servicing_area_catcher, print_list_of_dict, print_list_of_dict_selection, selection_catcher, selection_catcher_dict, blank_catcher, price_catcher, phone_catcher, int_catcher
 from .art import food_drink_art, order_art, courier_art, area_art, customer_art, new_product_art, new_courier_art, new_order_art, new_customer_art
@@ -108,7 +110,9 @@ def get_order_products(order_id: int, customer_id: int, courier_id: int):
         op_dict["product_id"] = product_list[prod_choice]["product_id"]
         op_dict["product_quantity"] = q_choice
         op_dict["product_name"] = product_list[prod_choice]["product_name"] #for info only - not uploaded to database
-        op_list.append(op_dict)
+        #making a deep copy
+        op_dict_copy = copy.deepcopy(op_dict)
+        op_list.append(op_dict_copy)
         #drop the product_id from the product_list
         dropped_product = product_list.pop(prod_choice)
         #print("dropped product:", dropped_product)
@@ -128,12 +132,22 @@ def get_order_products(order_id: int, customer_id: int, courier_id: int):
 ####################################################################################################
 ###    CREATE ORDER INVOICE
 ####################################################################################################
-def create_order_invoice(order_id:int):
+def create_order_invoice(order_id:int,new_order=0):
     #run query to get print list
     invoice_list = af.return_invoice_list(order_id)
     order_status = invoice_list[0]["order_status"]
     customer_name = invoice_list[0]["customer_name"]
     courier_name = invoice_list[0]["courier_name"]
+    if new_order ==1:
+        #assigning courier 
+        os.system("clear")
+        print(courier_art)
+        print("Assigning courier based on availability and customer servicing area...")
+        time.sleep(1)
+        print(f"The following courier has been assigned: {invoice_list[0]['courier_name']}")
+        time.sleep(2)
+    os.system("clear")
+
     print("***********************************************")
     print(f"Order ID: {order_id}")
     print(f"Order Status: {order_status}")
@@ -176,7 +190,7 @@ def create_new_order():
     #reducing stock by order amount
     af.update_stock(order_products_list)
     #add join to give customer an invoice with total
-    create_order_invoice(order_id)
+    create_order_invoice(order_id,new_order=1)
     return True
 #create_new_order()
 
