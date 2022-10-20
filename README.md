@@ -3,7 +3,7 @@
 ##
 
 ## What is this and how should it be used?
-When activated, this program will allow the user to use a python command line interface to insert new orders, products, customers and couriers into the mySQL database. The mySQL database is assumed to be running on the same machine that the user is using the python interface with.
+When activated, this application will allow the user to use a python command line interface to insert new orders, products, customers and couriers into the mySQL database. The mySQL database is assumed to be running on the same machine that the user is using the python interface with.
 
 In theory it would be possible to connect to a mySQL database not on the same machine, however that is not yet covered in this release.
 
@@ -18,17 +18,31 @@ In theory it would be possible to connect to a mySQL database not on the same ma
 
 
 ## Installation
-Installation made using using the Makefile in root folder. 
+Installation made using using the Makefile in root folder. The root folder is the folder that contains the <i>app.py</i> file and contains the following folders:
+<b>db</b> - this contains the <i>cafe_db.sql</i> script which is activated during usage. This will create the appropriate databases if they are not currently present
+<b>data</b> - this contains <i>.csv</i> of products, couriers, customers and orders which is generated on close of application.
+<b>source</b> - this contains all the important .py files which are essential for the smooth running of the application. Editing anything in here will void warranty and incur a <b>£400 penalty fee</b> for pulling the latest version from Github.
+and other folders which don't really do anything... 
 Type the following in the bash terminal:
 
 ```bash
 make install
 ```
+If you do not wish to run the make command, you can instead type this into the bash terminal:
+```bash
+pip install -r requirements.txt
+```
+
+
 ## Usage
 Type the following command in the bash terminal to run it:
 
 ```bash
 make run
+```
+If you do not wish to run the make command, you can instead type this into the bash terminal:
+```bash
+pip install -r requirements.txt
 ```
 ## I can't connect to the mySQL database, what should i do?
 No don't ring 015 yet... first run these 2 commands in your bash terminal line by line.
@@ -51,3 +65,6 @@ Unit test was used to iron out the main logic and flow of the different function
 ```bash
 coverage run -m pytest ./tests
 ```
+
+## What's planned for future releases?
+The plan is to make this more robust and fit for purpose for a volunteering organisation which is in need of a simple free database solution.
