@@ -12,7 +12,7 @@ from datetime import datetime
 # from phonenumbers import carrier
 # from phonenumbers.phonenumberutil import number_type
 from source.functions import yes_no_catcher, print_dict, print_dynamic_list, print_list_of_dict, selection_catcher, blank_catcher, price_catcher, phone_catcher, int_catcher, selection_catcher_dict
-from source.art import food_drink_art, order_art, courier_art, area_art, new_product_art, new_courier_art, customer_art, bootcamp_art,welcome_art
+from source.art import survey_art, food_drink_art, order_art, courier_art, area_art, new_product_art, new_courier_art, customer_art, bootcamp_art,welcome_art
 from source.order_menu import print_order, create_new_order, changing_order_status, new_customer_entry
 
 os.path.abspath(__file__)
@@ -40,7 +40,12 @@ def main_menu():
     try:
         choice = int(input("Please enter a valid option as listed above\n"))
         if choice == 0:
-            print("You have decided to quit the program\n")
+            os.system("clear")
+            print("Thank you for using this program\n")
+            print()
+            print()
+            print(survey_art)
+            save_and_exit()
             return choice
         if choice == 1: #products
             return product_menu()
@@ -86,6 +91,7 @@ def product_menu():
     if choice == 1: #printing items
         os.system('clear')
         print_list_of_dict(unique_list_of_dict)
+        print()
         input("Press any key to go back\n")
         return product_menu()
 
@@ -95,6 +101,7 @@ def product_menu():
             print(f"{category.title()} has been added successfully")
         else:
             print(f"Whoops... unable to add new {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return product_menu()
 
@@ -104,6 +111,7 @@ def product_menu():
             print(f"{category.title()} has been updated successfully")
         else:
             print(f"Whoops... unable to add update {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return product_menu()
 
@@ -113,6 +121,7 @@ def product_menu():
             print(f"{category.title()} has been deleted successfully")
         else:
             print(f"Whoops... unable to delete {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return product_menu()
 
@@ -137,6 +146,7 @@ def courier_menu():
     if choice == 1: #printing items
         os.system('clear')
         print_list_of_dict(unique_list_of_dict)
+        print()
         input("Press any key to go back\n")
         return courier_menu()
 
@@ -146,6 +156,7 @@ def courier_menu():
             print(f"{category.title()} has been added successfully")
         else:
             print(f"Whoops... unable to add new {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return courier_menu()
         
@@ -156,6 +167,7 @@ def courier_menu():
             print(f"{category.title()} has been updated successfully")
         else:
             print(f"Whoops... unable to update {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return courier_menu()
 
@@ -165,6 +177,7 @@ def courier_menu():
             print(f"{category.title()} has been deleted successfully")
         else:
             print(f"Whoops... unable to delete {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return courier_menu()
 
@@ -188,6 +201,7 @@ def customer_menu():
     if choice == 1: #printing items
         os.system('clear')
         print_list_of_dict(unique_list_of_dict)
+        print()
         input("Press any key to go back\n")
         return customer_menu()
 
@@ -197,6 +211,7 @@ def customer_menu():
             print(f"{category.title()} has been added successfully")
         else:
             print(f"Whoops... unable to add new {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return customer_menu()
         
@@ -207,6 +222,7 @@ def customer_menu():
             print(f"{category.title()} has updated successfully")
         else:
             print(f"Whoops... unable to update {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return customer_menu()
 
@@ -216,6 +232,7 @@ def customer_menu():
             print(f"{category.title()} has been deleted successfully")
         else:
             print(f"Whoops... unable to delete {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return customer_menu()
 ####################################################################################################
@@ -241,6 +258,7 @@ def order_menu():
     if choice == 1: #printing items
         os.system('clear')
         print_order()
+        print()
         input("Press any key to go back\n")
         return order_menu()
 
@@ -250,11 +268,13 @@ def order_menu():
             print(f"{category.title()} has been added successfully")
         else:
            print(f"Whoops... unable to add new {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return order_menu()
 
     if choice ==3:  #editing item
         changing_order_status()
+        print()
         input("Press any key to go back\n")
         return order_menu()
 
@@ -264,6 +284,7 @@ def order_menu():
             print(f"{category.title()} has been deleted successfully")
         else:
             print(f"Whoops... unable to delete {category}, please check database connection and try again")
+        print()
         input("Press any key to go back\n")
         return order_menu()
 
@@ -435,4 +456,16 @@ def delete_item(unique_list_of_dict:list,category:str):
     #print_dict(delete_product_dict)
     return delete_product_dict    
     
-    
+####################################################################################################
+###    SAVING AND EXIT
+####################################################################################################
+def save_and_exit():
+    """ Save the data snd exiting the app """
+    af.save_data_csv('orders')
+    af.save_data_csv('products')
+    af.save_data_csv('customers')
+    af.save_data_csv('couriers')
+    print()
+    print()
+    print("CSV files updated in <root_folder>/data")
+

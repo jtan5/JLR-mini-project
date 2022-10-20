@@ -104,3 +104,11 @@ new_customer_art = '''
 ███████║███████╗   ██║   ╚██████╔╝██║         ██║ ╚████║███████╗╚███╔███╔╝    ╚██████╗╚██████╔╝███████║   ██║   ╚██████╔╝██║ ╚═╝ ██║███████╗██║  ██║
 ╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝         ╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝      ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝
 '''
+
+survey_art = """
+We value your feedback. 
+
+In order to ensure we are continually improving our Digital Services, we would be grateful if you’d complete a brief customer satisfaction survey. 
+
+Please complete the survey at www.mocksurvey/JLR/data_engineering_bootcamp.co.uk
+"""

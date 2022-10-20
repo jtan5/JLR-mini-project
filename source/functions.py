@@ -194,4 +194,3 @@ def yes_no_catcher(question,art=None):
     yes_no = ["No","Yes"]
     return yes_no[selection_catcher(yes_no,question,art)]
 
-

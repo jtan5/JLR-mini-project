@@ -166,7 +166,7 @@ def test_print_dict(mock_print):
     #assemble
     #dummy_list =[{"element1":"Water0","element2":"Fire0","element3":"Earth0"},{"element1":"Water1","element2":"Fire1","element3":"Earth1"},{"element1":"Water2","element2":"Fire2","element3":"Earth2"},{"element1":"Water3","element2":"Fire3","element3":"Earth3"}]
     dummy_list ={"element1":"Water0","element2":"Fire0","element3":"Earth0"}
-    expected_print = '       element1:Water0              \n\n       element2:Fire0               \n\n       element3:Earth0              \n'
+    expected_print = '  element1:Water0              \t  element2:Fire0               \t  element3:Earth0              '
     #act
     functions.print_dict(dummy_list)
     #assert
