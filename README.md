@@ -77,10 +77,10 @@ The plan is to make this more robust and fit for purpose for a volunteering orga
 
 ## Q&A on how does this application works
 1. How does python know what the <b>order_id</b> is before mySQL assigns it?
-<br>It assigns a random integer between the limits allowed by mySQL: -2147483648 to 2147483647
+<br><i>It assigns a random integer between the limits allowed by mySQL: -2147483648 to 2147483647</i>
 
 2. How does it assign a courier to an order?
-<br> It does this by randomly selection an available courier within the same servicing area
+<br><i> It does this by randomly selection an available courier within the same servicing area</i>
 
 3. This cafe has lots of famous people as customers, how do you get so popular?
-<br> Hard work and going above and beyond goes a long way. :)
+<br><i> Hard work and going above and beyond goes a long way. :)</i>
