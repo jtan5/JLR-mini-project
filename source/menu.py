@@ -279,7 +279,9 @@ def order_menu():
         return order_menu()
 
     if choice ==4:  #deleting item
-        del_item = delete_many_items(unique_list_of_dict,category)
+        orders_list = af.return_order_status_all()
+        del_item = delete_many_items(orders_list,category)
+        #del_item = delete_many_items(unique_list_of_dict,category)
         if del_item is True:
             print(f"{category.title()} has been deleted successfully")
         else:
