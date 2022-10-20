@@ -211,7 +211,7 @@ def print_order():
     #orders_list = af.return_order_status(order_status)
     orders_list = af.return_order_status_all()
     os.system("clear")
-    print_list_of_dict(orders_list)
+    #print_list_of_dict(orders_list)
     question = "Which order would you like to focus on?"
     choice = selection_catcher_dict(orders_list,question,order_art)
     order_id = orders_list[choice]['order_id']
