@@ -427,8 +427,8 @@ def change_item(update_list:list, category:str):
         query_body = ",".join(query_list)
         final_query = f'{query_header} {query_body} {query_footer}'
         #print(final_query)
-        return execute_query(final_query)
-
+        a = execute_query(final_query)
+    return a
     #query to mimic =f """UPDATE products
 	#                       SET 
 	# 	                        product_size = "S",
@@ -480,8 +480,8 @@ def delete_item_db(update_list:list, category):
         query_body = ",".join(query_list)
         final_query = f'{query_header} {query_footer}'
         #print(final_query)
-        return execute_query(final_query)
-    
+        a = execute_query(final_query)
+    return a
 ####################################################################################################
 ###    SAVING DATA CSV
 ####################################################################################################
@@ -548,4 +548,4 @@ def save_data_csv(item_name: str):
             writer.writeheader()
             writer.writerows(rows)
             file.close()
-            
+    return True
