@@ -84,3 +84,6 @@ The plan is to make this more robust and fit for purpose for a volunteering orga
 
 3. This cafe has lots of famous people as customers, how do you get so popular?
 <br><i> Hard work and going above and beyond goes a long way. :)</i>
+
+4. There is alot of recursive functions, won't it stack overflow eventually?
+5. <br><i> Definitely, the limit is around 999... so best to only spin up the application when you need to</i>
